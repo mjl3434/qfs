@@ -1,15 +1,20 @@
 CC=g++
-CFLAGS=-I.
-#DEPS = hellomake.h
-OBJS = main.o
+CFLAGS=-g -Wall -std=c++17 -fno-stack-protector
+INCLUDES=-I.
 TARGET = qfs
-LINK = -lcrypto -lssl
+LINK_PATH = -L/usr/lib/x86_64-linux-gnu
+LINK = -lgmpxx -lgmp
 
-%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	$(CC) -o $@ $^ $(CFLAGS) $(LINK)
+$(TARGET): main.o qfs.o
+	$(CC) -o $@ $^ $(CFLAGS) $(LINK_PATH) $(LINK)
+
+main.o: main.cpp
+	$(CC) -o $@ -c $< $(INCLUDES) $(CFLAGS)
+
+qfs.o: qfs.cpp
+	$(CC) -o $@ -c $< $(INCLUDES) $(CFLAGS)
 
 clean:
-	rm -f $(TARGET) $(OBJS)
+	rm -f $(TARGET) main.o qfs.o
